@@ -33,6 +33,7 @@ void loop() {
   // Calculating the distance
   distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
   // Or should it be?: distance = (duration-10) * 0.034 / 2
+  // in water is should be maybe: distance = (duration-10) * 0.150 / 2 (Speed of sound in water ~1500 m/s instead of 340 m/s
   // Displays the distance on the Serial Monitor
   Serial.print("Distance: ");
   Serial.print(distance);
