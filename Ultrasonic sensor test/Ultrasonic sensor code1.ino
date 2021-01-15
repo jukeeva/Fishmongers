@@ -32,6 +32,7 @@ void loop() {
   duration = pulseIn(echoPin, HIGH);
   // Calculating the distance
   distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  // Or should it be?: distance = (duration-10) * 0.034 / 2
   // Displays the distance on the Serial Monitor
   Serial.print("Distance: ");
   Serial.print(distance);
