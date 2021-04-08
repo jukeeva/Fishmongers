@@ -12,6 +12,7 @@
 int ir_input1 = 2;
 int ir_input2 = 3;
 int fish = 0;
+int total = 0;
 
 // the setup routine runs once when you press reset:
 void setup() {
@@ -52,7 +53,8 @@ void loop() {
           else {
           fish=0;
           }
-          
+        total=fish+total;
+        Serial.println(total);  
         
   delay(1);        // delay in between reads for stability
 }
