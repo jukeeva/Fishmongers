@@ -1,0 +1,163 @@
+#include <Arduino.h>
+
+const int n_sensores = 9;
+const int n_linhas = 120;
+float contador_de_linhas_1 = 0;
+float contador_de_linhas_2 = 0;
+int sensores_input[n_sensores] = {4, 5, 6, 7, 8, 9, 10, 11, 12};
+int(i);
+int(j);
+int(k);
+float distancia = 20;
+float deltaT = 0;
+float tamanhoPEIXE = 0;
+float velocidade = 0;
+bool(pack_passando);
+float tempo_linha = 15; //ms
+bool Matrix[n_linhas][n_sensores];
+void exibe_matrix_inteira();
+void cria_matrix();
+void Interpreta_Matriz1();
+void Interpreta_Matriz2();
+void Calculadora();
+
+void setup()
+{
+  // put your setup code here, to run once:
+  for (i = 0; i < n_sensores; i++)
+  {
+    pinMode(sensores_input[i], INPUT);
+  }
+  Serial.begin(115200);
+  Serial.println("funciona");
+}
+
+void loop()
+{
+  // put your main code here, to run repeatedly:
+  pack_passando = false;
+  for (j = 0; j < n_sensores; j++)
+  {
+    if (digitalRead(sensores_input[j]) == 0)
+    {
+      pack_passando = true;
+    }
+  }
+  if (pack_passando == true)
+  {
+    cria_matrix();
+    exibe_matrix_inteira();
+    Interpreta_Matriz1();
+    Interpreta_Matriz2();
+    Calculadora();
+    pack_passando = false;
+    contador_de_linhas_1 = 0;
+    contador_de_linhas_2 = 0;
+  }
+}
+void exibe_matrix_inteira()
+{
+  Serial.println("[---]0123456789012345678");
+  for (k = 0; k < n_linhas; k++)
+  {
+    if (k < 100)
+    {
+      if (k < 10)
+      {
+        Serial.print("[00");
+        Serial.print(k);
+        Serial.print("]");
+      }
+      else
+      {
+        Serial.print("[0");
+        Serial.print(k);
+        Serial.print("]");
+      }
+    }
+
+    else
+    {
+      Serial.print("[");
+      Serial.print(k);
+      Serial.print("]");
+    }
+
+    //Serial.println();
+
+    for (i = 0; i < n_sensores; i++)
+    {
+      Serial.print(Matrix[k][i]);
+      //Serial.println(Matrix[k][i]);
+    }
+    Serial.println();
+  }
+  Serial.println(" ");
+}
+
+void cria_matrix()
+{
+  for (i = 0; i < n_linhas; i++)
+  {
+    for (j = 0; j < n_sensores; j++)
+    {
+      Matrix[i][j] = digitalRead(sensores_input[j]);
+    }
+    delay(tempo_linha);
+  }
+}
+
+void Interpreta_Matriz2()
+{
+  for (i = 0; i < n_linhas; i++)
+  {
+    for (j = 5; j < n_sensores; j++)
+    {
+      if (Matrix[i][j] == 0) //adicionar mais condiçoes pra aumentar linha de zeros
+      {
+        contador_de_linhas_2 = i;
+        Serial.print("contador_de_linhas_2 = ");
+        Serial.println(contador_de_linhas_2);
+        break; 
+      }
+    }
+    if (contador_de_linhas_2 != 0 )
+    {
+      break;
+    }
+  }
+}
+
+void Interpreta_Matriz1()
+{
+  for (i = 0; i < n_linhas; i++)
+  {
+    for (j = 0; j < 5; j++)
+    {
+      if (Matrix[i][0] == 1 && Matrix[i][1] == 1 && Matrix[i][2] == 1 && Matrix[i][3] == 1 && Matrix[i][4] == 1) //adicionar mais condiçoes pra aumentar linha de zeros
+      {
+        contador_de_linhas_1 = i-1;
+        Serial.print("contador_de_linhas_1 = ");
+        Serial.println(contador_de_linhas_1);
+        break; 
+      }
+    }
+    if (contador_de_linhas_1 != 0 )
+    {
+      break;
+    }
+  }
+}
+
+void Calculadora()
+{
+  deltaT = (contador_de_linhas_2 * tempo_linha) / 1000;
+  velocidade = distancia / deltaT;
+  tamanhoPEIXE = (velocidade * contador_de_linhas_1 * tempo_linha) / 1000 ;
+  Serial.print("deltaT = ");
+  Serial.println(deltaT);
+  Serial.print("velocidade = ");
+  Serial.println(velocidade);
+  Serial.print("tamanhoPEIXE = ");
+  Serial.println(tamanhoPEIXE);
+}
